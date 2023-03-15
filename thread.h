@@ -29,7 +29,10 @@ void create(void *fn) {
     .status = T_LIVE,
     .entry = fn,
   };
-  pthread_create(&(tptr->thread), NULL, wrapper, tptr);
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  pthread_attr_setstacksize(&attr, 8 * 1024 * 1024);
+  pthread_create(&(tptr->thread), &attr, wrapper, tptr);
   ++tptr;
 }
 

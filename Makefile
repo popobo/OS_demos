@@ -1,17 +1,19 @@
 CC = gcc
-CFLAGS = -Wall -Werror -lpthread
+CFLAGS = -Wall -Werror -MD
+LDFLAGS = -pthread
 
-SRC = $(wildcard *.c)
-OBJ = $(patsubst %.c, %, $(SRC))
-
-$(info $(SRC))
+SRCS = $(wildcard *.c)
+BINS = $(SRCS:%.c=%)
 
 .PHONY: all clean
 
-all: $(OBJ)
+all: $(BINS)
 
 %: %.c
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 clean:
-	rm $(OBJ)
+	rm $(BINS) $(BINS:%=%.d)
+
+-include $(SRCS:.c=.d)
+
